@@ -70,7 +70,7 @@ public class DiscordRpc
   }
 
   [DllImport("discord-rpc", EntryPoint = "Discord_Initialize", CallingConvention = CallingConvention.Cdecl)]
-  public static extern void Initialize(string applicationId, ref EventHandlers handlers, bool autoRegister, string optionalSteamId, int optionalPipeNumber);
+  public static extern void Initialize(string applicationId, ref EventHandlers handlers, bool autoRegister, string optionalSteamId, int pipe);
 
   [DllImport("discord-rpc", EntryPoint = "Discord_Shutdown", CallingConvention = CallingConvention.Cdecl)]
   public static extern void Shutdown();

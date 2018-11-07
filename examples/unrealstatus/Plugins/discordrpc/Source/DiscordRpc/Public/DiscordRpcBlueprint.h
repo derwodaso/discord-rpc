@@ -100,7 +100,7 @@ public:
     void Initialize(const FString& applicationId,
                     bool autoRegister,
                     const FString& optionalSteamId,
-                    int optionalPipeNumber);
+                    int pipe);
 
     UFUNCTION(BlueprintCallable,
               meta = (DisplayName = "Shut down connection", Keywords = "Discord rpc"),

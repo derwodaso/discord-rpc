@@ -66,7 +66,6 @@ static QueuedMessage QueuedPresence{};
 static MsgQueue<QueuedMessage, MessageQueueSize> SendQueue;
 static MsgQueue<User, JoinQueueSize> JoinAskQueue;
 static User connectedUser;
-static int PipeNumber{0};
 
 // We want to auto connect, and retry on failure, but not as fast as possible. This does expoential
 // backoff from 0.5 seconds to 1 minute
@@ -141,7 +140,7 @@ static void Discord_UpdateConnection(void)
     if (!Connection->IsOpen()) {
         if (std::chrono::system_clock::now() >= NextConnect) {
             UpdateReconnectTime();
-            Connection->Open(PipeNumber);
+            Connection->Open();
         }
     }
     else {
@@ -274,7 +273,7 @@ extern "C" DISCORD_EXPORT void Discord_Initialize(const char* applicationId,
                                                   DiscordEventHandlers* handlers,
                                                   int autoRegister,
                                                   const char* optionalSteamId,
-                                                  int pipe = 0)
+                                                  int pipe)
 {
     IoThread = new (std::nothrow) IoThreadHolder();
     if (IoThread == nullptr) {
@@ -309,9 +308,7 @@ extern "C" DISCORD_EXPORT void Discord_Initialize(const char* applicationId,
         return;
     }
 
-    PipeNumber = pipe;
-
-    Connection = RpcConnection::Create(applicationId, PipeNumber);
+    Connection = RpcConnection::Create(applicationId, pipe);
     Connection->onConnect = [](JsonDocument& readyMessage) {
         Discord_UpdateHandlers(&QueuedHandlers);
         auto data = GetObjMember(&readyMessage, "data");
